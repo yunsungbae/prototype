@@ -1,0 +1,240 @@
+#contents {
+	margin: 0px auto;
+	top: 135px;
+	width: 1105px;
+	position: relative;
+}
+
+#contents .banner {
+	float: left;
+}
+
+.album-wrap {
+	border: 1px solid rgb(220, 220, 220);
+	border-image: none;
+	width: 542px;
+	height: 410px;
+	overflow: hidden;
+	position: relative;
+}
+
+.album-wrap ul.album {
+	position: absolute;
+}
+
+.album-wrap ul.album li {
+	width: 544px;
+	float: left;
+}
+
+.banner ul.bt-roll {
+	float: right;
+	position: relative;
+}
+
+.banner ul.bt-roll li {
+	margin-left: 5px;
+	float: left;
+}
+
+#contents .map {
+	background: url("../image/map/map_bg.gif") no-repeat;
+	border: 1px solid rgb(220, 220, 220);
+	border-image: none;
+	width: 545px;
+	height: 412px;
+	margin-left: 13px;
+	float: left;
+}
+
+#contents .map li {
+	top: 55px;
+	float: left;
+	position: relative;
+}
+
+#contents .direct_board {
+	border: 1px solid rgb(220, 220, 220);
+	border-image: none;
+	width: 544px;
+	margin-top: 13px;
+	float: left;
+	background-color: rgb(255, 255, 255);
+}
+
+#contents .direct_board ul {
+	background: url("../image/map/free_bg.png") no-repeat left;
+	height: 205px;
+}
+
+#contents .direct_board ul:first-child {
+	background: url("../image/map/notice_bg.png") no-repeat left;
+	border-bottom-color: rgb(220, 220, 220);
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+#contents .direct_board ul>li:first-child {
+	width: 100%;
+	float: left;
+}
+
+
+#contents .direct_board ul>li>h2 {
+	padding: 25px 0px 0px 30px;
+	width: 20%;
+	text-align: left;
+	color: rgb(72, 99, 139);
+	font-size: 21px;
+	font-weight: 800;
+	float: left;
+}
+
+#contents .direct_board ul>li>span>a {
+	padding: 30px 40px 0px 0px;
+	color: rgb(72, 99, 139);
+	font-size: 12px;
+	float: right;
+}
+
+#contents .board_list {
+	margin: 10px 0px 0px 140px;
+	width: 71%;
+	height: 130px;
+	float: left;
+}
+
+#contents .board_list a {
+	padding: 3px 0px;
+	width: 100%;
+	color: rgb(88, 88, 88);
+	float: left;
+}
+
+#contents .board_list a:hover .title {
+	text-decoration: underline;
+}
+
+#contents .board_list span {
+	width: 100%;
+	font-size: 13px;
+	float: left;
+}
+
+#contents .board_list span>p {
+	width: 100%;
+	float: left;
+}
+
+#contents .board_list span>p.title {
+	width: 75%;
+	text-align: left;
+	overflow: hidden;
+	margin-right: 2%;
+	display: block;
+	white-space: nowrap;
+	-ms-text-overflow: ellipsis;
+}
+
+#contents .board_list span>p.date {
+	width: 20%;
+}
+
+#contents .field_search {
+	background: url("../image/map/field_bg.gif") no-repeat;
+	margin: 15px 0px 0px 13px;
+	border: 1px solid rgb(220, 220, 220);
+	border-image: none;
+	width: 305px;
+	height: 410px;
+	float: left;
+}
+
+#contents .field_search ul {
+	margin: 63px auto 0px;
+	width: 90%;
+}
+
+#contents .field_search ul>a>li {
+	margin: 3px;
+	padding: 20px 10px;
+	width: 110px;
+	float: left;
+}
+
+#contents .field_search ul>a>li:hover img {
+	top: 2px;
+	position: relative;
+}
+
+#contents .direct_icon {
+	margin: 15px 0px 0px 10px;
+	border: 1px solid rgb(4, 66, 153);
+	border-image: none;
+	width: 223px;
+	height: 203px;
+	float: left;
+	background-color: rgb(255, 255, 255);
+}
+
+#contents .direct_icon ul>li:first-child {
+	background: url("../image/map/directmenu.png") no-repeat;
+	margin: 25px auto 5px;
+	border: currentColor;
+	border-image: none;
+	width: 187px;
+	height: 33px;
+}
+
+#contents .direct_icon ul>li>a:hover img {
+	top: 2px;
+	position: relative;
+}
+
+#contents .direct_icon ul>li {
+	margin: 0px auto;
+	padding: 8px 0px;
+	width: 85%;
+	border-top-color: rgb(4, 66, 153);
+	border-bottom-color: rgb(4, 66, 153);
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+}
+
+#contents .direct_line {
+	margin: 15px 0px 0px 10px;
+	border: 1px solid rgb(4, 66, 153);
+	border-image: none;
+	width: 223px;
+	height: 190px;
+	float: left;
+	background-color: rgb(255, 255, 255);
+}
+
+#contents .direct_line ul {
+	margin-top: 10%;
+}
+
+#contents .direct_line ul>li {
+	margin: 3px auto;
+	padding: 5% 0%;
+	border: 1px solid rgb(4, 66, 153);
+	border-image: none;
+	width: 80%;
+}
+
+#contents .direct_line ul>li:hover {
+	background-color: rgb(4, 66, 153);
+}
+
+#contents .direct_line ul>li:hover a {
+	color: rgb(255, 255, 255);
+}
+
+#contents .direct_line ul>li>a {
+	padding: 3% 5%;
+	color: rgb(72, 99, 139);
+	font-size: 12px;
+}
