@@ -79,12 +79,12 @@ function fn_get_layers() {
 	}
 	
 	var params = $.extend({}, opener.layerObj.getSource().getParams());
-	layers.push(new ol.layer.Image({ source : new ol.source.ImageWMS({
-		url : "proxy/wms.do",
-		params : params,
-		ratio : 1,
-		serverType : "geoserver"
-	})}));
+//	layers.push(new ol.layer.Image({ source : new ol.source.ImageWMS({
+//		url : "proxy/wms.do",
+//		params : params,
+//		ratio : 1,
+//		serverType : "geoserver"
+//	})}));
 	
 	layers.push(new ol.layer.Vector({
 		source : opener.highlightObj.source,

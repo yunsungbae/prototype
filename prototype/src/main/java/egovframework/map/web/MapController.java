@@ -73,9 +73,9 @@ public class MapController {
 	 * 인쇄
 	 * @return
 	 */
-	@RequestMapping("/admin/map/print.do")
+	@RequestMapping("/print.do")
 	public String print() {
-		return "/admin/map/print";
+		return "/egovframework/map/print";
 	}
 	
 	/**

@@ -149,7 +149,12 @@ ol.interaction.Measure.prototype.drawEnd = function(evt) {
 		value = len;
 	}
 	else if(this.type == "area") {
-		value = evt.feature.getGeometry().getArea();
+		 value = evt.feature.getGeometry().getArea();
+	var 	val=this.formatArea(value);
+	val+= "<a href='#' class='ol-tooltip-measure-close' onclick='areaObj.remove(" + this.index + ")'; >x</a>"
+		evt.feature.set("index", this.index);
+		$(this.overlay.getElement()).html(val);
+	
 	}
 	else if(this.type == "radius") {
 		var geometry = this.feature.getGeometry();

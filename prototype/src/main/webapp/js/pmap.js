@@ -20,6 +20,7 @@ var pMap = {
 		that.initMap();
 		historyObj.init();
 		measureObj.init();
+		areaObj.init();
 //		spatialInfo.init();
 //		polygonSearch.init();
 //		highlightObj.init();
@@ -313,7 +314,7 @@ var pMap = {
 	 */
 	openPrint : function() {
 		var that = this;
-		var url = CONTEXT_PATH + "/admin/map/print.do";
+		var url = CONTEXT_PATH + "/print.do";
 		var pop = window.open(url, "Print", "width=705,height=900");
 		pop.focus();
 	},
@@ -412,33 +413,34 @@ var historyObj = {
 	 */
 	init : function() {
 		var that = this;
+
 		pMap.getMap().on("moveend", function() {
-			
+			debugger;
 			var extent = [14147546, 4543716, 14187329, 4606121];
 			var center = this.getView().getCenter();
 			
 			// 포천시 영역내로만 이동하도록 제약
-			if(!ol.extent.containsCoordinate(extent, center)) {
-				var history = that.prevHistories[that.prevHistories.length-1];
-				var view = pMap.getMap().getView();
-				that.flag = true;
-				view.setCenter(history.center);
-				view.setResolution(view.constrainResolution(history.resolution));
-			}
-			else {
+//			if(!ol.extent.containsCoordinate(extent, center)) {
+//				var history = that.prevHistories[that.prevHistories.length-1];
+//				var view = pMap.getMap().getView();
+//				that.flag = true;
+//				view.setCenter(history.center);
+//				view.setResolution(view.constrainResolution(history.resolution));
+//			}
+//			else {
 				if(that.flag) {
 					that.flag = false;
 				}
 				else {
 					var history = {
 						center : center,
-						resolution : this.getView().getResolution()
+						resolution : pMap.getMap().getView().getResolution()
 					};
 					that.prevHistories.push(history);
 					that.nextHistories = [];
 				}
-			}
-		});
+//			}
+	});
 	},
 	
 	/**
@@ -446,7 +448,7 @@ var historyObj = {
 	 */
 	prev : function() {
 		var that = this;
-		
+		debugger;
 		if(that.prevHistories.length > 1) {
 			that.nextHistories.push(that.prevHistories.pop());
 			var history = that.prevHistories[that.prevHistories.length-1];
@@ -584,7 +586,107 @@ var measureObj = {
 	}
 		
 };
-
+/**
+ * 측정
+ * @type {Object}
+ */
+var areaObj = {
+		
+	/**
+	 * 벡터 소스
+	 * @type {ol.source.Vector}
+	 */
+	source : null,
+	
+	/**
+	 * 초기화
+	 */
+	init : function() {
+		var that = this;
+		that.createLayer();
+		that.addInteractions();
+	},
+	
+	/**
+	 * 벡터 레이어 생성 및 등록
+	 */
+	createLayer : function() {
+		var that = this;
+		
+		that.source = new ol.source.Vector();
+		var measureVector = new ol.layer.Vector({
+			id : "areaVector",
+			source : that.source,
+			style : new ol.style.Style({
+	            fill : new ol.style.Fill({
+	                color : 'rgba(255, 255, 255, 0.2)'
+	            }),
+	            stroke : new ol.style.Stroke({
+	                color : '#ffcc33',
+	                width : 2
+	            }),
+	            image : new ol.style.Circle({
+	                radius : 7,
+	                fill : new ol.style.Fill({
+	                    color : '#ffcc33'
+	                })
+	            })
+	        })
+		});
+		pMap.getMap().addLayer(measureVector);
+	},
+	
+	/**
+	 * 인터렉션 생성 및 등록
+	 */
+	addInteractions : function() {
+		var that = this;
+		var interaction = new ol.interaction.Measure({ type : "area", source : that.source });
+		interaction.set("id", "area");
+		interaction.set("name", "area");
+    	pMap.getMap().addInteraction(interaction);
+	},
+	
+	/**
+	 * 정리
+	 */
+	clear : function() {
+		var that = this;
+		var map = pMap.getMap();
+		var features = that.source.getFeatures();
+		for(var i=features.length-1; i >= 0; i--) {
+			that.source.removeFeature(features[i]);
+		}
+		var overlays = map.getOverlays();
+		for(var i=overlays.get("length")-1; i >= 0; i--) {
+			var overlay = overlays.item(i);
+			map.removeOverlay(overlay);
+		}
+	},
+	
+	/**
+	 * 결과 삭제
+	 * @param index 인덱스
+	 */
+	remove : function(index) {
+		var that = this;
+		var map = pMap.getMap();
+		var features = that.source.getFeatures();
+		for(var i=features.length-1; i >= 0; i--) {
+			if(features[i].get("index") == index) {
+				that.source.removeFeature(features[i]);
+			}
+		}
+		var overlays = map.getOverlays();
+		for(var i=overlays.get("length")-1; i >= 0; i--) {
+			var overlay = overlays.item(i);
+			if(overlay.get("name") == "area" && overlay.get("index") == index) {
+				map.removeOverlay(overlay);
+			}
+		}
+	}
+		
+};
 /**
  * 레이어 객체
  */

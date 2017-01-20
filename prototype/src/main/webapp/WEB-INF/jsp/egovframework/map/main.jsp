@@ -187,6 +187,9 @@
 		}  else if (type == 'save') {
 			pMap.save();
 		}
+	  else if (type == 'area') {
+		pMap.activeInteractions("area", "drag");
+	}
 	}
 
 	var menutType = 1;
@@ -271,6 +274,7 @@
 	            <li><a href="javascript:mapctrl('prev')"   class="ctrlM07" title="이전">이전</a></li>
 	            <li><a href="javascript:mapctrl('next')"   class="ctrlM06" title="다음">다음</a></li>
 	            <li><a href="javascript:mapctrl('distance')" class="ctrlM08" title="거리재기">거리재기</a></li>
+	              <li><a href="javascript:mapctrl('area')" class="ctrlM08" title="면적">면적</a></li>
 	            <li><a href="javascript:mapctrl('print')"    class="ctrlM09" title="인쇄">인쇄</a></li>
 	            <li><a href="javascript:mapctrl('save')"    class="ctrlM10" title="저장">저장</a></li>
 	        </ul>
