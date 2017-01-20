@@ -18,8 +18,8 @@ var pMap = {
 		
 		that.initCrs();
 		that.initMap();
-	//	historyObj.init();
-//		measureObj.init();
+		historyObj.init();
+		measureObj.init();
 //		spatialInfo.init();
 //		polygonSearch.init();
 //		highlightObj.init();
