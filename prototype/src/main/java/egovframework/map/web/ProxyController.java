@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  */
 @Controller
-@RequestMapping("/admin/map")
 public class ProxyController {
 	
 	// 로거

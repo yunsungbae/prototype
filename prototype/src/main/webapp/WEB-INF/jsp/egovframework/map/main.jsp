@@ -38,6 +38,8 @@
 <script type="text/javascript" src="<c:url value='/js/custom/measureinteraction.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/custom/translateinteraction.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/custom/scalelinecontrol.js' />"></script>
+
+<script type="text/javascript" src="<c:url value='/js/custom/emap.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/custom/vworldsource.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/pmap.js' />"></script>
 <!-- <script src="http://code.jquery.com/jquery-1.10.2.js"></script> -->
@@ -104,7 +106,7 @@
 			     return false; 
 			  }
 		});
-		containerReset();
+		//containerReset();
 		 $(window).resize(function(){
 		      initAll();
 		}).resize();
@@ -165,7 +167,7 @@
 	function mapctrl(type) {
 		if (type == 'all') {
 			pMap.moveAll();
-			containerReset();
+			containerReset//	containerReset();
 		} else if (type == 'move') {
 			pMap.activeInteractions("drag");
 		} else if (type == 'select') {
@@ -195,16 +197,16 @@
 			break;
 		case 1:
 			menutType = 1;
-			containerReset();
+		//	containerReset();
 			break;
 		case 2:
 			menutType = 2;
-			containerReset();
+		//	containerReset();
 			examineSelect();
 			break;
 		case 3:
 			menutType = 3;
-			containerReset();
+		//	containerReset();
 			examineSelect();
 			break;
 		case 4:
@@ -221,7 +223,7 @@
 			break;
 		case 7:
 			menutType = 4;
-			containerReset();
+		//	containerReset();
 			undeclaredSelect();
 			break;
 		default:

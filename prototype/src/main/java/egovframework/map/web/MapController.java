@@ -23,11 +23,12 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.co.door.utils.StringUtils;
-import kr.co.mangoe.admin.image.service.ImageService;
+
+import egovframework.com.cmm.utils.StringUtils;
+//import egovframework.image.service.ImageService;
 /*import kr.co.door.utils.StringUtils;*/
 import egovframework.map.service.MapService;
-import kr.co.mangoe.cmmn.BaseController;
+
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -46,28 +47,28 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import kr.co.mangoe.env.CodeManager;*/
 
 @Controller
-public class MapController extends BaseController {
+public class MapController {
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Resource(name = "mapService")
-	private MapService mapService;
+//	@Resource(name = "mapService")
+//	private MapService mapService;
+//	
 	
-	
-	@Resource(name = "imageService")
-	private ImageService imageService;
-	
+//	@Resource(name = "imageService")
+//	private egovframework.image.service.ImageService imageService;
+//	
 	/*@Autowired
 	private CodeManager codeManager;*/
 
 	/**
 	 * @Description 메인
 	 */
-	@RequestMapping("/admin/map/main.do")
-	public String main(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
-		model.put("result", mapService.retrieveByMain(param));
-		return "/admin/map/main";
-	}
-	
+//	@RequestMapping("/admin/map/main.do")
+//	public String main(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
+//		model.put("result", mapService.retrieveByMain(param));
+//		return "/admin/map/main";
+//	}
+//	
 	/**
 	 * 인쇄
 	 * @return
@@ -88,7 +89,7 @@ public class MapController extends BaseController {
 	public void downloadImage(HttpServletRequest request, HttpServletResponse response, @RequestHeader(value="User-Agent") String userAgent) throws Exception {
 		String data = request.getParameter("data");
 		String base64Str = null;
-		if(StringUtils.isBlank(data)) {
+		if(egovframework.com.cmm.utils.StringUtils.isBlank(data)) {
 			data = IOUtils.toString(request.getInputStream());
 			String[] split = data.split("%2C");
 			base64Str = split[1];
@@ -127,20 +128,20 @@ public class MapController extends BaseController {
 		}
 	}
 
-	@RequestMapping("/admin/map/popupmenuByDudt.do")
-	public String popupmenuByDudt(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
-		
-		List<EgovMap> resultListByPrposQltwtr = mapService.retrieveListByPrposQltwtr(param);
-		model.addAttribute("resultListByPrposQltwtr", resultListByPrposQltwtr);
-
-		List<EgovMap> resultListByAftfat = mapService.retrieveListByAftfat(param);
-		model.addAttribute("resultListByAftfat", resultListByAftfat);
-
-		List<EgovMap> resultListByPrmisn = mapService.retrieveListByPrmisn(param);
-		model.addAttribute("resultListByPrmisn", resultListByPrmisn);
-		
-		return "/admin/map/popupmenuByDudt";
-	}
+//	@RequestMapping("/admin/map/popupmenuByDudt.do")
+//	public String popupmenuByDudt(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
+//		
+//		List<EgovMap> resultListByPrposQltwtr = mapService.retrieveListByPrposQltwtr(param);
+//		model.addAttribute("resultListByPrposQltwtr", resultListByPrposQltwtr);
+//
+//		List<EgovMap> resultListByAftfat = mapService.retrieveListByAftfat(param);
+//		model.addAttribute("resultListByAftfat", resultListByAftfat);
+//
+//		List<EgovMap> resultListByPrmisn = mapService.retrieveListByPrmisn(param);
+//		model.addAttribute("resultListByPrmisn", resultListByPrmisn);
+//		
+//		return "/admin/map/popupmenuByDudt";
+//	}
 	
 
 	@RequestMapping(value = "/admin/map/searchJibun.do")
@@ -275,315 +276,315 @@ public class MapController extends BaseController {
 	/**
 	 * @Description setFeature
 	 */
-	@RequestMapping("/admin/map/retrieveByInfo.do")
-	public String retrieveByInfo(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
-		String url = "/admin/map/popupmenuBy";
-		
-		
-		EgovMap result = mapService.retrieve(param);
-		
-		if(!param.get("dbname").equals("SEOUL_DISTANCE") ){
-			model.addAttribute("resultByTotal", result);
-		} else {
-			Map<String, Object> paramBySpt =  new HashMap<String, Object>();
-			paramBySpt.put("dbname", "spt_examin_result");
-			paramBySpt.put("prmisnSttemntNo", result.get("prmisnSttemntNo"));
-			EgovMap resultBySpt = mapService.retrieve(paramBySpt); 
-			model.addAttribute("resultByTotal", resultBySpt);
-		}
-		
-		
-		if(param.get("dbname").equals("FTTDC_GEOM")){
-			url = url.concat("Fttdc");
-		}else if(param.get("dbname").equals("SPCIFY_GRL_GEOM")){
-			url = url.concat("Spcify");
-		}else if(param.get("dbname").equals("USE_END_RCLMLND_GEOM")){
-			url = url.concat("Rclmlnd");
-		}else if(param.get("dbname").equals("STALL_FCLTY_STTUS_DTA_GEOM")){
-			url = url.concat("Stall");
-		}else if(param.get("dbname").equals("MINERAL_SPRING_GEOM")){
-			url = url.concat("Mineral");
-		}else if(param.get("dbname").equals("SMALL_SCALE_GEOM")){
-			url = url.concat("Small");
-		}else if(param.get("dbname").equals("FRMNG_LGZ_WELL_GEOM")){
-			url = url.concat("FrmngLgz");
-		}else {
-			url = url.concat("Spt");
-		}
-		
-		//System.out.println(param.get("dbname"));
-		if(result.get("prmisnSttemntNo")!=null && result.get("prmisnSttemntNo")!=""){
-			Map<String, Object> paramBySeoul =  new HashMap<String, Object>();
-			
-			paramBySeoul.put("dbname", "seoul_administ_dta");
-			paramBySeoul.put("prmisnSttemntNo", result.get("prmisnSttemntNo") );
+//	@RequestMapping("/admin/map/retrieveByInfo.do")
+//	public String retrieveByInfo(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
+//		String url = "/admin/map/popupmenuBy";
+//		
+//		
+//		EgovMap result = mapService.retrieve(param);
+//		
+//		if(!param.get("dbname").equals("SEOUL_DISTANCE") ){
+//			model.addAttribute("resultByTotal", result);
+//		} else {
+//			Map<String, Object> paramBySpt =  new HashMap<String, Object>();
+//			paramBySpt.put("dbname", "spt_examin_result");
+//			paramBySpt.put("prmisnSttemntNo", result.get("prmisnSttemntNo"));
+//			EgovMap resultBySpt = mapService.retrieve(paramBySpt); 
+//			model.addAttribute("resultByTotal", resultBySpt);
+//		}
+//		
+//		
+//		if(param.get("dbname").equals("FTTDC_GEOM")){
+//			url = url.concat("Fttdc");
+//		}else if(param.get("dbname").equals("SPCIFY_GRL_GEOM")){
+//			url = url.concat("Spcify");
+//		}else if(param.get("dbname").equals("USE_END_RCLMLND_GEOM")){
+//			url = url.concat("Rclmlnd");
+//		}else if(param.get("dbname").equals("STALL_FCLTY_STTUS_DTA_GEOM")){
+//			url = url.concat("Stall");
+//		}else if(param.get("dbname").equals("MINERAL_SPRING_GEOM")){
+//			url = url.concat("Mineral");
+//		}else if(param.get("dbname").equals("SMALL_SCALE_GEOM")){
+//			url = url.concat("Small");
+//		}else if(param.get("dbname").equals("FRMNG_LGZ_WELL_GEOM")){
+//			url = url.concat("FrmngLgz");
+//		}else {
+//			url = url.concat("Spt");
+//		}
+//		
+//		//System.out.println(param.get("dbname"));
+//		if(result.get("prmisnSttemntNo")!=null && result.get("prmisnSttemntNo")!=""){
+//			Map<String, Object> paramBySeoul =  new HashMap<String, Object>();
+//			
+//			paramBySeoul.put("dbname", "seoul_administ_dta");
+//			paramBySeoul.put("prmisnSttemntNo", result.get("prmisnSttemntNo") );
+//	
+//			EgovMap resultBySeoul = mapService.retrieve(paramBySeoul);
+//			
+//			model.addAttribute("resultBySeoul", resultBySeoul);
+//			
+//			List<EgovMap> resultListByQltwtr = mapService.retrieveListByQltwtr(paramBySeoul);
+//					
+//			model.addAttribute("resultListByQltwtr", resultListByQltwtr);
+//			
+//			Map<String,Object> imgParam = getParamByAllData(param);
+//			imgParam.put("fileType","pdf");
+//			List<EgovMap> pdfFilelist = imageService.retrieveList(imgParam);
+//			
+//			imgParam.put("fileType","img");
+//			List<EgovMap> imgFilelist = imageService.retrieveList(imgParam);
+//				
+//			model.addAttribute("pdfFilelist",pdfFilelist);
+//			model.addAttribute("imgFilelist",imgFilelist);
+//		}
+//	
+//		
+//		return url;
+//	}
+//
+//	@RequestMapping("/admin/map/popupmenuByDevPosbl.do")
+//	public String popupmenuByDevPosbl(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
+//		
+//		Map<String, Object> paramByFiveHund =  new HashMap<String, Object>();
+//		
+//		paramByFiveHund.putAll(param);
+//		
+//		paramByFiveHund.put("distance", "500");
+//		
+//		paramByFiveHund.put("wspPopltn", "2.90");
+//		
+//		List<EgovMap> resultByFiveHund = mapService.retrieveListByDistance(paramByFiveHund);
+//		
+//		model.addAttribute("resultByFiveHund", resultByFiveHund);
+//		
+//		Map<String, Object> paramByFifty =  new HashMap<String, Object>();
+//		
+//		paramByFifty.putAll(param);
+//		
+//		paramByFifty.put("distance", "50");
+//		
+//		paramByFifty.put("wspPopltn", "2.90");
+//		
+//		List<EgovMap> resultByFifty = mapService.retrieveListByDistance(paramByFifty);
+//		
+//		model.addAttribute("resultByFifty", resultByFifty);
+//		
+//		EgovMap resultByPrcptqy = mapService.retrieveByPrcptqy(param);
+//		model.addAttribute("resultByPrcptqy", resultByPrcptqy);
+//		
+//		EgovMap resultByClttrt = mapService.retrieveByClttrt(param);
+//		model.addAttribute("resultByClttrt", resultByClttrt);
+//		
+//		return "/admin/map/popupmenuByDevPosbl";
+//	}
+//	@RequestMapping("/admin/map/popupmenuByPolygontab1.do")
+//	public String popupmenuByPolygontab1(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
+//		
+//		Map<String, Object> paramByPolygon =  new HashMap<String, Object>();
+//		
+//		paramByPolygon.putAll(param);
+//		
+//		String str = "'";
+//		str = str.concat(param.get("prmisnSttemntNoList").toString());
+//		str = str.concat("'");
+//		str = str.replace(",", "', '");
+//		
+//		paramByPolygon.put("prmisnSttemntNo", str);
+//		paramByPolygon.put("wspPopltn", "2.90");
+//		/*
+//		List<EgovMap> resultListByPolygon = mapService.retrieveListByPolygon(paramByPolygon);
+//		
+//		model.addAttribute("resultListByPolygon", resultListByPolygon);
+//		*/
+//		EgovMap resultByPrcptqy = mapService.retrieveByPrcptqy(param);
+//		model.addAttribute("resultByPrcptqy", resultByPrcptqy);
+//		
+//		EgovMap resultByClttrt = mapService.retrieveByClttrt(param);
+//		model.addAttribute("resultByClttrt", resultByClttrt);
+//		
+//		return "/admin/map/popupmenuByPolygontab1";
+//	}
+//	@RequestMapping("/admin/map/popupmenuByPolygon.do")
+//	public String popupmenuByPolygon(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
+//		
+//		Map<String, Object> paramByPolygon =  new HashMap<String, Object>();
+//		
+//		paramByPolygon.putAll(param);
+//		
+//		String str = "'";
+//		str = str.concat(param.get("prmisnSttemntNoList").toString());
+//		str = str.concat("'");
+//		str = str.replace(",", "', '");
+//		
+//		paramByPolygon.put("prmisnSttemntNo", str);
+//		paramByPolygon.put("wspPopltn", "2.90");
+//		
+//		List<EgovMap> resultListByPolygon = mapService.retrieveListByPolygon(paramByPolygon);
+//		
+//		model.addAttribute("resultListByPolygon", resultListByPolygon);
+//		
+//		EgovMap resultByPrcptqy = mapService.retrieveByPrcptqy(param);
+//		model.addAttribute("resultByPrcptqy", resultByPrcptqy);
+//		
+//		EgovMap resultByClttrt = mapService.retrieveByClttrt(param);
+//		model.addAttribute("resultByClttrt", resultByClttrt);
+//		
+//		return "/admin/map/popupmenuByPolygon";
+//	}
+//	
+//	@RequestMapping("/admin/map/popupmenuByStatTbl.do")
+//	public String popupmenuByStatTbl(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
+//		
+//		
+//		List<EgovMap> resultList = mapService.retrieveListByStatTbl(param);
+//		
+//		model.addAttribute("resultList", resultList);
+//		
+//		return "/admin/map/popupmenuByStatTbl";
+//	}
+//	
 	
-			EgovMap resultBySeoul = mapService.retrieve(paramBySeoul);
-			
-			model.addAttribute("resultBySeoul", resultBySeoul);
-			
-			List<EgovMap> resultListByQltwtr = mapService.retrieveListByQltwtr(paramBySeoul);
-					
-			model.addAttribute("resultListByQltwtr", resultListByQltwtr);
-			
-			Map<String,Object> imgParam = getParamByAllData(param);
-			imgParam.put("fileType","pdf");
-			List<EgovMap> pdfFilelist = imageService.retrieveList(imgParam);
-			
-			imgParam.put("fileType","img");
-			List<EgovMap> imgFilelist = imageService.retrieveList(imgParam);
-			
-			model.addAttribute("pdfFilelist",pdfFilelist);
-			model.addAttribute("imgFilelist",imgFilelist);
-		}
-	
-		
-		return url;
-	}
-
-	@RequestMapping("/admin/map/popupmenuByDevPosbl.do")
-	public String popupmenuByDevPosbl(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
-		
-		Map<String, Object> paramByFiveHund =  new HashMap<String, Object>();
-		
-		paramByFiveHund.putAll(param);
-		
-		paramByFiveHund.put("distance", "500");
-		
-		paramByFiveHund.put("wspPopltn", "2.90");
-		
-		List<EgovMap> resultByFiveHund = mapService.retrieveListByDistance(paramByFiveHund);
-		
-		model.addAttribute("resultByFiveHund", resultByFiveHund);
-		
-		Map<String, Object> paramByFifty =  new HashMap<String, Object>();
-		
-		paramByFifty.putAll(param);
-		
-		paramByFifty.put("distance", "50");
-		
-		paramByFifty.put("wspPopltn", "2.90");
-		
-		List<EgovMap> resultByFifty = mapService.retrieveListByDistance(paramByFifty);
-		
-		model.addAttribute("resultByFifty", resultByFifty);
-		
-		EgovMap resultByPrcptqy = mapService.retrieveByPrcptqy(param);
-		model.addAttribute("resultByPrcptqy", resultByPrcptqy);
-		
-		EgovMap resultByClttrt = mapService.retrieveByClttrt(param);
-		model.addAttribute("resultByClttrt", resultByClttrt);
-		
-		return "/admin/map/popupmenuByDevPosbl";
-	}
-	@RequestMapping("/admin/map/popupmenuByPolygontab1.do")
-	public String popupmenuByPolygontab1(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
-		
-		Map<String, Object> paramByPolygon =  new HashMap<String, Object>();
-		
-		paramByPolygon.putAll(param);
-		
-		String str = "'";
-		str = str.concat(param.get("prmisnSttemntNoList").toString());
-		str = str.concat("'");
-		str = str.replace(",", "', '");
-		
-		paramByPolygon.put("prmisnSttemntNo", str);
-		paramByPolygon.put("wspPopltn", "2.90");
-		/*
-		List<EgovMap> resultListByPolygon = mapService.retrieveListByPolygon(paramByPolygon);
-		
-		model.addAttribute("resultListByPolygon", resultListByPolygon);
-		*/
-		EgovMap resultByPrcptqy = mapService.retrieveByPrcptqy(param);
-		model.addAttribute("resultByPrcptqy", resultByPrcptqy);
-		
-		EgovMap resultByClttrt = mapService.retrieveByClttrt(param);
-		model.addAttribute("resultByClttrt", resultByClttrt);
-		
-		return "/admin/map/popupmenuByPolygontab1";
-	}
-	@RequestMapping("/admin/map/popupmenuByPolygon.do")
-	public String popupmenuByPolygon(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
-		
-		Map<String, Object> paramByPolygon =  new HashMap<String, Object>();
-		
-		paramByPolygon.putAll(param);
-		
-		String str = "'";
-		str = str.concat(param.get("prmisnSttemntNoList").toString());
-		str = str.concat("'");
-		str = str.replace(",", "', '");
-		
-		paramByPolygon.put("prmisnSttemntNo", str);
-		paramByPolygon.put("wspPopltn", "2.90");
-		
-		List<EgovMap> resultListByPolygon = mapService.retrieveListByPolygon(paramByPolygon);
-		
-		model.addAttribute("resultListByPolygon", resultListByPolygon);
-		
-		EgovMap resultByPrcptqy = mapService.retrieveByPrcptqy(param);
-		model.addAttribute("resultByPrcptqy", resultByPrcptqy);
-		
-		EgovMap resultByClttrt = mapService.retrieveByClttrt(param);
-		model.addAttribute("resultByClttrt", resultByClttrt);
-		
-		return "/admin/map/popupmenuByPolygon";
-	}
-	
-	@RequestMapping("/admin/map/popupmenuByStatTbl.do")
-	public String popupmenuByStatTbl(@RequestParam Map<String, Object> param, ModelMap model) throws Exception {
-		
-		
-		List<EgovMap> resultList = mapService.retrieveListByStatTbl(param);
-		
-		model.addAttribute("resultList", resultList);
-		
-		return "/admin/map/popupmenuByStatTbl";
-	}
 	
 	
-	
-	
-	@RequestMapping("/admin/map/ajaxSetFeatureByDB.do")
-	@ResponseBody
-	public Map<String, Object> ajaxRetrieveListByTube(@RequestParam Map<String, Object> param) throws Exception {
-		ModelMap model = new ModelMap();
-		if(param.get("groupNo").equals("0")){
-			Map<String,String> map = new HashMap<>();
-			map.put("seoul_distance","1");
-			/*map.put("use_end_rclmlnd_geom","4");
-			map.put("stall_fclty_sttus_dta_geom","4");
-			map.put("fttdc_geom","4");
-			map.put("spcify_grl_geom","4");
-			map.put("small_scale_geom","5");
-			map.put("mineral_spring_geom","5");
-			map.put("frmng_lgz_well_geom","5");*/
-			
-			List<EgovMap> resultList = new ArrayList<>();
-			for(String key:map.keySet()){
-				
-				param.put("dbname", key);
-				param.put("groupNo", map.get(key));
-				param.put("serchVal", "");
-				
-				List<EgovMap> result = mapService.retrieveListByTube(param);
-				resultList.addAll(result);
-				
-			}
-			model.addAttribute("resultList", resultList);
-		}else{
-			List<EgovMap> resultList = mapService.retrieveListByTube(param);
-			model.addAttribute("resultList", resultList);
-		}
-		
-
-		return super.getSuccessResult(model);
-	}
-	
-	@RequestMapping("/admin/map/ajaxRetrieveListByTubeAddr.do")
-	@ResponseBody
-	public Map<String, Object> ajaxRetrieveListByTubeAddr(@RequestParam Map<String, Object> param) throws Exception {
-		ModelMap model = new ModelMap();
-		if(param.get("flag").equals("1")){
-			
-			param.put("dbname","seoul_distance");
-			
-			List<EgovMap> resultList = mapService.retrieveListByTubeAddr(param);
-			model.addAttribute("resultList", resultList);
-			
-		}else{
-			param.put("dbname","undeclared");
-			
-			List<EgovMap> resultList = mapService.retrieveListByTubeAddr(param);
-			model.addAttribute("resultList", resultList);
-		}
-		
-		return super.getSuccessResult(model);
-	}
-	
-	@RequestMapping("/admin/map/ajaxSearchDistance.do")
-	@ResponseBody
-	public Map<String, Object> ajaxSearchDistance(@RequestParam Map<String, Object> param) throws Exception {
-
-		ModelMap model = new ModelMap();
-		List<EgovMap> resultList = mapService.retrieveListByDistance(param);
-		model.addAttribute("resultList", resultList);
-		
-		return super.getSuccessResult(model);
-	}
-	
-
-	@RequestMapping("/admin/map/ajaxUpdateByPrmisnSttemntNo.do")
-	@ResponseBody
-	public Map<String, Object> ajaxUpdateByPrmisnSttemntNo(@RequestParam Map<String, Object> param) throws Exception {
-
-		mapService.updateByPrmisnSttemntNo(param);
-		
-		param.put("rm", "미신고관정 양성화");
-		mapService.insertByLegalized(param);
-
-		return super.getSuccessResult();
-	}
-	
-	@RequestMapping("/admin/map/ajaxRetrieveByDudt.do")
-	@ResponseBody
-	public Map<String, Object> ajaxRetrieveByDudt(@RequestParam Map<String, Object> param) throws Exception {
-
-		ModelMap model = new ModelMap();
-		popupmenuByDudt(param, model);
-
-		return super.getSuccessResult(model);
-	}
-	
-	@RequestMapping("/admin/map/ajaxRetrieveListByEmd.do")
-	@ResponseBody
-	public Map<String, Object> ajaxRetrieveListByEmd(@RequestParam Map<String, Object> param) throws Exception {
-
-		ModelMap model = new ModelMap();
-		List<EgovMap> resultList = mapService.retrieveListByEmd(param);
-		model.addAttribute("resultList", resultList);
-
-		return super.getSuccessResult(model);
-	}
-	
-	@RequestMapping("/admin/map/ajaxRetrieveListByRi.do")
-	@ResponseBody
-	public Map<String, Object> ajaxRetrieveListByRi(@RequestParam Map<String, Object> param) throws Exception {
-
-		ModelMap model = new ModelMap();
-		List<EgovMap> resultList = mapService.retrieveListByRi(param);
-		model.addAttribute("resultList", resultList);
-
-		return super.getSuccessResult(model);
-	}
-	
-	@RequestMapping("/admin/map/ajaxRetrieveListByJibun.do")
-	@ResponseBody
-	public Map<String, Object> ajaxRetrieveListByJibun(@RequestParam Map<String, Object> param) throws Exception {
-
-		ModelMap model = new ModelMap();
-		List<EgovMap> resultList = mapService.retrieveListByJibun(param);
-		model.addAttribute("resultList", resultList);
-
-		return super.getSuccessResult(model);
-	}
-	
-	@RequestMapping("/admin/map/ajaxInsertByQltwtrInspctDta.do")
-	@ResponseBody
-	public Map<String, Object> ajaxInsertByQltwtrInspctDta(@RequestParam Map<String, Object> param) throws Exception {
-
-		mapService.insertByQltwtrInspctDta(param);
-
-		return super.getSuccessResult();
-	}
-	
-	@RequestMapping("/admin/map/ajaxDeleteByQltwtrInspctDta.do")
-	@ResponseBody
-	public Map<String, Object> ajaxDeleteByQltwtrInspctDta(@RequestParam Map<String, Object> param) throws Exception {
-
-		mapService.deleteByQltwtrInspctDta(param);
-
-		return super.getSuccessResult();
-	}
+//	@RequestMapping("/admin/map/ajaxSetFeatureByDB.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxRetrieveListByTube(@RequestParam Map<String, Object> param) throws Exception {
+//		ModelMap model = new ModelMap();
+//		if(param.get("groupNo").equals("0")){
+//			Map<String,String> map = new HashMap<>();
+//			map.put("seoul_distance","1");
+//			/*map.put("use_end_rclmlnd_geom","4");
+//			map.put("stall_fclty_sttus_dta_geom","4");
+//			map.put("fttdc_geom","4");
+//			map.put("spcify_grl_geom","4");
+//			map.put("small_scale_geom","5");
+//			map.put("mineral_spring_geom","5");
+//			map.put("frmng_lgz_well_geom","5");*/
+//			
+//			List<EgovMap> resultList = new ArrayList<>();
+//			for(String key:map.keySet()){
+//				
+//				param.put("dbname", key);
+//				param.put("groupNo", map.get(key));
+//				param.put("serchVal", "");
+//				
+//				List<EgovMap> result = mapService.retrieveListByTube(param);
+//				resultList.addAll(result);
+//				
+//			}
+//			model.addAttribute("resultList", resultList);
+//		}else{
+//			List<EgovMap> resultList = mapService.retrieveListByTube(param);
+//			model.addAttribute("resultList", resultList);
+//		}
+//		
+//
+//		return super.getSuccessResult(model);
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxRetrieveListByTubeAddr.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxRetrieveListByTubeAddr(@RequestParam Map<String, Object> param) throws Exception {
+//		ModelMap model = new ModelMap();
+//		if(param.get("flag").equals("1")){
+//			
+//			param.put("dbname","seoul_distance");
+//			
+//			List<EgovMap> resultList = mapService.retrieveListByTubeAddr(param);
+//			model.addAttribute("resultList", resultList);
+//			
+//		}else{
+//			param.put("dbname","undeclared");
+//			
+//			List<EgovMap> resultList = mapService.retrieveListByTubeAddr(param);
+//			model.addAttribute("resultList", resultList);
+//		}
+//		
+//		return super.getSuccessResult(model);
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxSearchDistance.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxSearchDistance(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		ModelMap model = new ModelMap();
+//		List<EgovMap> resultList = mapService.retrieveListByDistance(param);
+//		model.addAttribute("resultList", resultList);
+//		
+//		return super.getSuccessResult(model);
+//	}
+//	
+//
+//	@RequestMapping("/admin/map/ajaxUpdateByPrmisnSttemntNo.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxUpdateByPrmisnSttemntNo(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		mapService.updateByPrmisnSttemntNo(param);
+//		
+//		param.put("rm", "미신고관정 양성화");
+//		mapService.insertByLegalized(param);
+//
+//		return super.getSuccessResult();
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxRetrieveByDudt.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxRetrieveByDudt(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		ModelMap model = new ModelMap();
+//		popupmenuByDudt(param, model);
+//
+//		return super.getSuccessResult(model);
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxRetrieveListByEmd.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxRetrieveListByEmd(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		ModelMap model = new ModelMap();
+//		List<EgovMap> resultList = mapService.retrieveListByEmd(param);
+//		model.addAttribute("resultList", resultList);
+//
+//		return super.getSuccessResult(model);
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxRetrieveListByRi.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxRetrieveListByRi(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		ModelMap model = new ModelMap();
+//		List<EgovMap> resultList = mapService.retrieveListByRi(param);
+//		model.addAttribute("resultList", resultList);
+//
+//		return super.getSuccessResult(model);
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxRetrieveListByJibun.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxRetrieveListByJibun(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		ModelMap model = new ModelMap();
+//		List<EgovMap> resultList = mapService.retrieveListByJibun(param);
+//		model.addAttribute("resultList", resultList);
+//
+//		return super.getSuccessResult(model);
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxInsertByQltwtrInspctDta.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxInsertByQltwtrInspctDta(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		mapService.insertByQltwtrInspctDta(param);
+//
+//		return super.getSuccessResult();
+//	}
+//	
+//	@RequestMapping("/admin/map/ajaxDeleteByQltwtrInspctDta.do")
+//	@ResponseBody
+//	public Map<String, Object> ajaxDeleteByQltwtrInspctDta(@RequestParam Map<String, Object> param) throws Exception {
+//
+//		mapService.deleteByQltwtrInspctDta(param);
+//
+//		return super.getSuccessResult();
+//	}
 }

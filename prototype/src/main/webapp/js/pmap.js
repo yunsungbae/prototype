@@ -13,16 +13,17 @@ var pMap = {
 	 */
 	init : function() {
 		var that = this;
+		debugger;
 		layerObj.init();
 		
 		that.initCrs();
 		that.initMap();
-		historyObj.init();
-		measureObj.init();
-		spatialInfo.init();
-		polygonSearch.init();
-		highlightObj.init();
-		
+	//	historyObj.init();
+//		measureObj.init();
+//		spatialInfo.init();
+//		polygonSearch.init();
+//		highlightObj.init();
+//		
 		that.bindEvents();
 		that.activeInteractions("drag");
 	},
@@ -34,6 +35,10 @@ var pMap = {
 		var that = this;
 		var crsId = "EPSG:5181";
 		proj4.defs(crsId, "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs");
+		proj4.defs("SR-ORG:7165", "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs"); 
+		/* 현재 국토지리원 표준 중부원점(GRS80) EPSG:5186,EPSG:102082 */
+		proj4.defs("EPSG:5186", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs");
+		proj4.defs("EPSG:102082", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs");
 		var projection = new ol.proj.Projection({
 			code : crsId,
 			extent : [90112, 1192896, 1990673, 2761664],
@@ -78,6 +83,76 @@ var pMap = {
 			})
 		});
 	},
+//	initMap : function() {
+//		var that = this;
+//		var mapCrsName = 'EPSG:102082';
+//		var mapSrsBaroName = 'SR-ORG:7165';
+//		var mapSrsDaumName = 'EPSG:5181';
+//		
+//		var projectionCRS = ol.proj.get(mapCrsName); //CRS : 원좌표(디비에 구축된 좌표)
+//		var projectionBaroSRS = ol.proj.get(mapSrsBaroName); //SRS : 호출해서 불러올 좌표(화면에 보여줄 바로E맵 좌표)
+//		var projectionDaumSRS = ol.proj.get(mapSrsDaumName); //SRS : 호출해서 불러올 좌표(화면에 보여줄 로드뷰라인 좌표)
+//		//var initProjection = $('.rdoMap:checked',parent.document).val() == 'BARO_BASE' ? projectionBaroSRS:projectionCRS;
+//		
+//	    //청주좌표
+//		var CrsLeftBottomX = 214600; //좌하단 X좌표 사용자 설정
+//		var CrsLeftBottomY = 421000; // 좌하단 Y좌표 사용자 설정
+//		var CrsRightTopX = 279000;		//우상단 X좌표 사용자 설정
+//		var CrsRightTopY = 466000;   	//우상단 Y좌표 사용자 설정
+//		var baro_extent = [-200000.0, -28024123.62 , 31824123.62, 4000000.0];
+//		//cehyun. L6-L19 기존수치 유지. L20-L21 새한 바로e맵 수치적용.
+//		var baro_resolutions = [1954.597389,977.2986945,488.64934725,
+//		                        244.324673625,122.1623368125,61.08116840625,
+//		                        30.540584203125,15.2702921015625,7.63514605078125,
+//		                        3.817573025390625,1.9087865126953125,0.9543932563476563,
+//		                        0.47719662817382813,0.23859831408691406,0.119299157,0.0596495785];
+//		var CrsExtent = [CrsLeftBottomX,CrsLeftBottomY,CrsRightTopX,CrsRightTopY];
+//		var SrsBaroExtent =  ol.proj.transformExtent(CrsExtent,projectionCRS,projectionBaroSRS);
+//		var SrsBaroCenter = ol.extent.getCenter(SrsBaroExtent);
+//		baro_base_layer = new ol.layer.Tile({
+//	         title: "BARO_BASE",
+//	         source: new ol.source.TileImage({
+//	        	 projection: projectionBaroSRS,
+//	        	 tileGrid: new ol.tilegrid.TileGrid({
+//	        	        origin: [baro_extent[0], baro_extent[1]],
+//	        	        resolutions: baro_resolutions
+//	        	 }),
+//	        	 tileUrlFunction: function(tileCoord, pixelRatio, projection) {
+//	                 if (tileCoord[1] < 0 || tileCoord[2] < 0) { 
+//	                     return "";}
+//	                 var z = tileCoord[0]+6;
+//	                 z = z<10? '0'+z:z;
+//	                 var x =tileCoord[1];
+//	                 var y =tileCoord[2];
+//	                 
+//	               //  var url = './proxy.jsp?url='+tmsBaseUrlDefault+'/L' + z+'/'+ x +'/'+ y +'.png'; // 오프라인 청주개발서버 방법
+//	                 
+//	                 /*
+//	                 var url = ngiiTileUrls +'L' + z+'/'+ x +'/'+ y +'.png'; //API 제공하여 api key 사용하여 바로e맵 온라인 연계 방법
+//	                 */
+//	             	var url ="proxy.do?url=http://emap.ngii.go.kr/proxy/proxyTile.jsp?apikey=RB_wJMX0B0xdYL7NHNCy1Q&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/"+'L' + z+'/'+ x +'/'+ y +'.png';
+//	             //	http://emap.ngii.go.kr/proxy/proxyTile.jsp?apikey=RB_wJMX0B0xdYL7NHNCy1Q&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/L06/3/59.png
+//	                 return url; 
+//	             }
+//	         })
+//	     });
+//		that.map = new ol.Map({
+//			target : "div_map",
+//			layers : [baro_base_layer],
+//			interactions : that.createInteractions(),
+//			controls : that.createControls(),
+//			view : new ol.View({
+//		    	 projection: projectionBaroSRS,
+//		    	 center: SrsBaroCenter, 
+//		    	 extent: SrsBaroExtent,
+//		    	 maxResolution:122.16209227364743,
+//		    	 maxZoom:12, //청주
+//		    	 minZoom:0,
+//		    	 zoom: 1
+//				
+//			})
+//		});
+//	},
 	
 	/**
 	 * 기능 초기화
@@ -953,6 +1028,11 @@ var layerObj = {
 		satellite : null,
 		hybrid : null
 	},
+	emap : {
+		base : null,
+		satellite : null,
+		hybrid : null
+	},
 	
 	/**
 	 * 초기화
@@ -971,13 +1051,14 @@ var layerObj = {
 	 */
 	getLayers : function() {
 		var that = this;
-		
+		debugger;
 		var layers = [];
+	//	that.emap.base = new ol.layer.Tile({source : new ol.source.emap(),visible:true});
 		that.vworld.base = new ol.layer.Tile({ source : new ol.source.vworld(), visible : true });
 		that.vworld.satellite = new ol.layer.Tile({ source : new ol.source.vworld({ type : "satellite" }), visible : false });
 		that.vworld.hybrid = new ol.layer.Tile({ source : new ol.source.vworld({ type : "hybrid" }), visible : false });
 		that.layer = new ol.layer.Image({ source : that.getSource() });
-
+	//	layers.push(that.emap.base);
 		layers.push(that.vworld.base);
 		layers.push(that.vworld.satellite);
 		layers.push(that.vworld.hybrid);
@@ -1094,7 +1175,7 @@ var layerObj = {
 	 * 화면 갱신
 	 */
 	reload : function() {
-		debugger;
+		
 		var that = this;
 		var layers = [];
 		var nodes = $("#ul_layer_tree").tree("getChecked");
