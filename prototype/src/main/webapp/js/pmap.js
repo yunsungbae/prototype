@@ -13,7 +13,8 @@ var pMap = {
 	 */
 	init : function() {
 		var that = this;
-		debugger;
+		
+		
 		layerObj.init();
 		
 		that.initCrs();
@@ -23,7 +24,7 @@ var pMap = {
 		areaObj.init();
 //		spatialInfo.init();
 //		polygonSearch.init();
-//		highlightObj.init();
+		highlightObj.init();
 //		
 		that.bindEvents();
 		that.activeInteractions("drag");
@@ -356,6 +357,37 @@ var pMap = {
 		});
 		that.map.renderSync();
 	},
+	btnEdit : function(){
+		pMap.getMap().addInteraction(select);
+	var	interaction = new ol.interaction.Modify({
+			features: select.getFeatures()
+			});
+	pMap.getMap().addInteraction(interaction);
+		
+		
+	var	snap = new ol.interaction.Snap({
+			source: layerVector.getSource()
+			});
+	pMap.getMap().addInteraction(snap);
+	
+	var	dirty = {};
+		select.getFeatures().on('add', function(e) {
+			e.element.on('change', function(e) {
+				dirty[e.target.getId()] = true;
+				});
+			});
+		select.getFeatures().on('remove', function(e) {
+		var	f = e.element;
+			if (dirty[f.getId()]){
+				delete dirty[f.getId()];
+		var		featureProperties = f.getProperties();
+			    delete featureProperties.boundedBy;
+			    var clone = new ol.Feature(featureProperties);
+			    clone.setId(f.getId());
+			    transactWFS('update',clone);
+				}
+			});
+	},
 	
 	/**
 	 * 이벤트 연결
@@ -415,7 +447,7 @@ var historyObj = {
 		var that = this;
 
 		pMap.getMap().on("moveend", function() {
-			debugger;
+			
 			var extent = [14147546, 4543716, 14187329, 4606121];
 			var center = this.getView().getCenter();
 			
@@ -448,7 +480,7 @@ var historyObj = {
 	 */
 	prev : function() {
 		var that = this;
-		debugger;
+		
 		if(that.prevHistories.length > 1) {
 			that.nextHistories.push(that.prevHistories.pop());
 			var history = that.prevHistories[that.prevHistories.length-1];
@@ -669,6 +701,7 @@ var areaObj = {
 	 * @param index 인덱스
 	 */
 	remove : function(index) {
+		
 		var that = this;
 		var map = pMap.getMap();
 		var features = that.source.getFeatures();
@@ -680,7 +713,7 @@ var areaObj = {
 		var overlays = map.getOverlays();
 		for(var i=overlays.get("length")-1; i >= 0; i--) {
 			var overlay = overlays.item(i);
-			if(overlay.get("name") == "area" && overlay.get("index") == index) {
+			if(overlay.get("name") == "measure" && overlay.get("index") == index) {
 				map.removeOverlay(overlay);
 			}
 		}
@@ -701,103 +734,103 @@ var layerObj = {
 	    type : "root",
 	    state : "open",
 	    children : [
-		    {
-		    	id : "1",
-			    text : "허가관정",
-			    type : "group",
-			    state : "closed",
-			    checked : true,
-			    children : [
-			        {
-			        	id : "sttemnt_prmisn_lvlh",
-					    text : "생활용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "sttemnt_prmisn_indprp",
-					    text : "공업용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "sttemnt_prmisn_farmng",
-					    text : "농업용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "sttemnt_prmisn_etc",
-					    text : "기타",
-					    type : "geoserver",
-					    checked : true
-			        }
-			    ]
-		    },
-		    {
-		    	id : "2",
-			    text : "신고관정",
-			    type : "group",
-			    state : "closed",
-			    checked : true,
-			    children : [
-			        {
-			        	id : "sttemnt_sttemnt_lvlh",
-					    text : "생활용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "sttemnt_sttemnt_indprp",
-					    text : "공업용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "sttemnt_sttemnt_farmng",
-					    text : "농업용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "sttemnt_sttemnt_etc",
-					    text : "기타",
-					    type : "geoserver",
-					    checked : true
-			        } 
-		        ]
-			    
-		    },
-		    {
-		    	id : "3",
-			    text : "온천시설",
-			    type : "group",
-			    state : "closed",
-			    checked : true,
-			    children : [
-			        {
-			        	id : "hspr_fclty",
-					    text : "온천시설",
-					    type : "geoserver",
-					    checked : true
-			        }
-		        ]
-		    },
-		    {
-		    	id : "4",
-			    text : "굴착행위",
-			    type : "group",
-			    state : "closed",
-			    checked : true,
-			    children : [
-			        {
-			        	id : "dgg_action",
-					    text : "굴착행위",
-					    type : "geoserver",
-					    checked : true
-			        }
-		        ]
-		    },
+//		    {
+//		    	id : "1",
+//			    text : "허가관정",
+//			    type : "group",
+//			    state : "closed",
+//			    checked : true,
+//			    children : [
+//			        {
+//			        	id : "sttemnt_prmisn_lvlh",
+//					    text : "생활용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "sttemnt_prmisn_indprp",
+//					    text : "공업용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "sttemnt_prmisn_farmng",
+//					    text : "농업용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "sttemnt_prmisn_etc",
+//					    text : "기타",
+//					    type : "geoserver",
+//					    checked : true
+//			        }
+//			    ]
+//		    },
+//		    {
+//		    	id : "2",
+//			    text : "신고관정",
+//			    type : "group",
+//			    state : "closed",
+//			    checked : true,
+//			    children : [
+//			        {
+//			        	id : "sttemnt_sttemnt_lvlh",
+//					    text : "생활용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "sttemnt_sttemnt_indprp",
+//					    text : "공업용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "sttemnt_sttemnt_farmng",
+//					    text : "농업용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "sttemnt_sttemnt_etc",
+//					    text : "기타",
+//					    type : "geoserver",
+//					    checked : true
+//			        } 
+//		        ]
+//			    
+//		    },
+//		    {
+//		    	id : "3",
+//			    text : "온천시설",
+//			    type : "group",
+//			    state : "closed",
+//			    checked : true,
+//			    children : [
+//			        {
+//			        	id : "hspr_fclty",
+//					    text : "온천시설",
+//					    type : "geoserver",
+//					    checked : true
+//			        }
+//		        ]
+//		    },
+//		    {
+//		    	id : "4",
+//			    text : "굴착행위",
+//			    type : "group",
+//			    state : "closed",
+//			    checked : true,
+//			    children : [
+//			        {
+//			        	id : "dgg_action",
+//					    text : "굴착행위",
+//					    type : "geoserver",
+//					    checked : true
+//			        }
+//		        ]
+//		    },
 		    {
 		    	id : "5",
 			    text : "공공관정",
@@ -821,39 +854,39 @@ var layerObj = {
 			        }
 		        ]
 		    },
-		    {
-		    	id : "6",
-			    text : "미신고관정",
-			    type : "group",
-			    state : "closed",
-			    checked : true,
-			    children : [
-			        {
-			        	id : "unsttemnt_lvlh",
-					    text : "생활용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "unsttemnt_indprp",
-					    text : "공업용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "unsttemnt_farmng",
-					    text : "농업용",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "unsttemnt_etc",
-					    text : "기타",
-					    type : "geoserver",
-					    checked : true
-			        } 
-		        ]
-		    },
+//		    {
+//		    	id : "6",
+//			    text : "미신고관정",
+//			    type : "group",
+//			    state : "closed",
+//			    checked : true,
+//			    children : [
+//			        {
+//			        	id : "unsttemnt_lvlh",
+//					    text : "생활용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "unsttemnt_indprp",
+//					    text : "공업용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "unsttemnt_farmng",
+//					    text : "농업용",
+//					    type : "geoserver",
+//					    checked : true
+//			        },
+//			        {
+//			        	id : "unsttemnt_etc",
+//					    text : "기타",
+//					    type : "geoserver",
+//					    checked : true
+//			        } 
+//		        ]
+//		    },
 		    {
 		    	id : "7",
 			    text : "오염원",
@@ -962,7 +995,7 @@ var layerObj = {
 					    type : "geoserver"
 			        }
 		        ]
-		    },
+	    },
 		    {
 		    	id : "10",
 			    text : "지적도",
@@ -971,119 +1004,12 @@ var layerObj = {
 			    checked : true,
 			    children : [
 			        {
-			        	id : "pochun_emd_map",
+	 	id : "pochun_emd_map",
 					    text : "읍면동",
 					    type : "geoserver",
 					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_sineup",
-					    text : "신읍동",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_eoryong",
-					    text : "어룡동",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_jajak",
-					    text : "자작동",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_seondan",
-					    text : "선단동",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_seorun",
-					    text : "설운동",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_donggyo",
-					    text : "동교동",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_soheul",
-					    text : "소흘읍",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_gunnae",
-					    text : "군내면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_naechon",
-					    text : "내촌면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_gasan",
-					    text : "가산면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_sinbuk",
-					    text : "신북면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_changsu",
-					    text : "창수면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_yeongjung",
-					    text : "영중면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_ildong",
-					    text : "일동면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_idong",
-					    text : "이동면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_yeongbuk",
-					    text : "영북면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_gwanin",
-					    text : "관인면",
-					    type : "geoserver",
-					    checked : true
-			        },
-			        {
-			        	id : "pochun_jijuk_grs80_hwahyeon",
-					    text : "화현면",
-					    type : "geoserver",
-					    checked : true
 			        }
+
 		        ]
 		    }
 	    ]
@@ -1135,6 +1061,11 @@ var layerObj = {
 		satellite : null,
 		hybrid : null
 	},
+	emd_vector : {
+		base : null,
+		satellite : null,
+		hybrid : null
+	},
 	
 	/**
 	 * 초기화
@@ -1144,6 +1075,7 @@ var layerObj = {
 		that.createSource();
 		//that.load();
 		//that.appendImages();
+		
 		that.createTree();
 	},
 	
@@ -1161,11 +1093,12 @@ var layerObj = {
 		that.vworld.hybrid = new ol.layer.Tile({ source : new ol.source.vworld({ type : "hybrid" }), visible : false });
 		that.layer = new ol.layer.Image({ source : that.getSource() });
 	//	layers.push(that.emap.base);
+		that.emd_vector = layerVector;
 		layers.push(that.vworld.base);
 		layers.push(that.vworld.satellite);
 		layers.push(that.vworld.hybrid);
 		layers.push(that.layer);
-		
+		layers.push(that.emd_vector);
 		return layers;
 	},
 	

@@ -41,6 +41,7 @@
 
 <script type="text/javascript" src="<c:url value='/js/custom/emap.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/custom/vworldsource.js' />"></script>
+<script type="text/javascript" src="<c:url value='/js/ol3-wfs-t.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/pmap.js' />"></script>
 <!-- <script src="http://code.jquery.com/jquery-1.10.2.js"></script> -->
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -186,7 +187,10 @@
 			pMap.openPrint();
 		}  else if (type == 'save') {
 			pMap.save();
+		} else if (type == 'edit') {
+			pMap.btnEdit();
 		}
+		
 	  else if (type == 'area') {
 		pMap.activeInteractions("area", "drag");
 	}
@@ -242,22 +246,22 @@
 	<form id="frm" method="post">
 		<input type="hidden" id="multiMgrnu" name="multiMgrnu" />
 	</form>
-	<div id="mapnavi">
-		<div class="mapnavibg">
-			<a href="javascript:reFresh();"><img src="<c:url value='/image/logo.png' />" /></a>
-		</div>
-		<ul>
-			<li class="m_menu"><a href="javascript:getView(0)">지하수현황</a></li>
-			<li class="m_menu"><a href="javascript:getView(1)" class="txt_01">관정검색</a></li>
-			<li class="m_menu"><a href="javascript:getView(2)" class="txt_01">인허가검토</a></li>
-			<li class="m_menu"><a href="javascript:getView(3)" class="txt_01">개발가능성검토</a></li>
-			<li class="m_menu"><a href="javascript:getView(4)" class="txt_02">허가연장(${result.prmisn})</a></li>
-			<li class="m_menu"><a href="javascript:getView(5)" class="txt_02">사후관리(${result.aftfat})</a></li>
-			<li class="m_menu"><a href="javascript:getView(6)" class="txt_02">수질검사(${result.prposqltwtr})</a></li>
-			<li class="m_menu"><a href="javascript:getView(7)">미신고관정관리</a></li>
-			<li class="m_menu"><a href="<c:url value='/admin/main.do' />">관리자</a></li>
-		</ul>
-	</div>
+<!-- 	<div id="mapnavi"> -->
+<!-- 		<div class="mapnavibg"> -->
+<%-- 			<a href="javascript:reFresh();"><img src="<c:url value='/image/logo.png' />" /></a> --%>
+<!-- 		</div> -->
+<!-- 		<ul> -->
+<!-- 			<li class="m_menu"><a href="javascript:getView(0)">지하수현황</a></li> -->
+<!-- 			<li class="m_menu"><a href="javascript:getView(1)" class="txt_01">관정검색</a></li> -->
+<!-- 			<li class="m_menu"><a href="javascript:getView(2)" class="txt_01">인허가검토</a></li> -->
+<!-- 			<li class="m_menu"><a href="javascript:getView(3)" class="txt_01">개발가능성검토</a></li> -->
+<%-- 			<li class="m_menu"><a href="javascript:getView(4)" class="txt_02">허가연장(${result.prmisn})</a></li> --%>
+<%-- 			<li class="m_menu"><a href="javascript:getView(5)" class="txt_02">사후관리(${result.aftfat})</a></li> --%>
+<%-- 			<li class="m_menu"><a href="javascript:getView(6)" class="txt_02">수질검사(${result.prposqltwtr})</a></li> --%>
+<!-- 			<li class="m_menu"><a href="javascript:getView(7)">미신고관정관리</a></li> -->
+<%-- 			<li class="m_menu"><a href="<c:url value='/admin/main.do' />">관리자</a></li> --%>
+<!-- 		</ul> -->
+<!-- 	</div> -->
 	
 	<div id="div_map_menu">
 		<ul id="ul_layer_tree"></ul>
@@ -277,6 +281,7 @@
 	              <li><a href="javascript:mapctrl('area')" class="ctrlM08" title="면적">면적</a></li>
 	            <li><a href="javascript:mapctrl('print')"    class="ctrlM09" title="인쇄">인쇄</a></li>
 	            <li><a href="javascript:mapctrl('save')"    class="ctrlM10" title="저장">저장</a></li>
+	               <li><a href="javascript:mapctrl('edit')"    class="ctrlM10" title="저장">편집</a></li>
 	        </ul>
 	    </div>
 	    <div src="<c:url value='/frame/mapzoom.do'/>" style="position: absolute; top: 160px; right: 20px; z-index: 9999; width: 71px; height: 150px;" id="mapzoom" border="0" frameborder="0" scrolling="no" allowTransparency="true" class="mapzoomArea">
@@ -292,140 +297,140 @@
      
 	</div>
 	
-	<div id="panel02">
-		<div id="container" class="tabmenu">
-			<ul class="tabs03">
-				<li class="active seoul" rel="tab1">시설검색</li>
-				<li rel="tab2">지번검색</li>
-				<li rel="tab3">새주소검색</li>
-				<li class="undclared" rel="tab4">시설검색</li>
-			</ul>
-			<div class="tab_container">
-				<div id="tab1" class="tab_content panel seoul">
-					<ul>
-						<p>
-							<span>구분</span> <select size="1" id="searchGroup" name="searchGroup" onchange='changedSearchGroup()'>
-								<option value="0" selected="selected">전체</option>
-								<option value="1">허가</option>
-								<option value="2">신고</option>
-								<!-- <option value="3">미신고관정</option> -->
-								<option value="6">온천시설</option>
-								<option value="7">굴착행위</option>
-								<!-- <option value="4">오염원</option> -->
-								<!-- <option value="5">공공관정</option> -->
-							</select>
-						</p>
-						<p>
-							<span>용도</span> <select size="1" id="searchSelect" name="searchSelect">
-								<option value="" selected="selected">전체</option>
-							</select>
-						</p>
-						<p>
-							<span>관리번호</span>
-							<input id="searchMgrnu" name="searchMgrnu" type="text" placeholder="검색어를 입력하세요."></input>
-						</p>
-						<p>
-							<span style="width: 100%" class="seoul">ex) 103, 2005-88</span>
-						</p>
-						<a class="btn_search" href="javascript:featureSearch()"><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-					</ul>
-				</div>
-				<!-- #tab1 -->
-				<div id="tab2" class="tab_content panel">
-					<ul>
-						<p style="padding-top: 3%;">
-							<span>읍면동</span> <select size="1" id="searchEmd" name="searchEmd" onchange='changedSearchEmd()'>
-								<option value="" selected="selected">전체</option>
-							</select>
-						</p>
-						<p>
-							<span>리</span> <select size="1" id="searchRi" name="searchRi">
-								<option value="" selected="selected">전체</option>
-							</select>
-						</p>
-						<p>
-							<span>지번검색</span><input id="jibun" name="jibun" type="text" placeholder="검색어를 입력하세요."></input>
-						</p>
-						<p>
-							<span style="width: 100%">ex) 소흘읍 송우리, 소흘읍 무림리</span>
-						</p>
+<!-- 	<div id="panel02"> -->
+<!-- 		<div id="container" class="tabmenu"> -->
+<!-- 			<ul class="tabs03"> -->
+<!-- 				<li class="active seoul" rel="tab1">시설검색</li> -->
+<!-- 				<li rel="tab2">지번검색</li> -->
+<!-- 				<li rel="tab3">새주소검색</li> -->
+<!-- 				<li class="undclared" rel="tab4">시설검색</li> -->
+<!-- 			</ul> -->
+<!-- 			<div class="tab_container"> -->
+<!-- 				<div id="tab1" class="tab_content panel seoul"> -->
+<!-- 					<ul> -->
+<!-- 						<p> -->
+<!-- 							<span>구분</span> <select size="1" id="searchGroup" name="searchGroup" onchange='changedSearchGroup()'> -->
+<!-- 								<option value="0" selected="selected">전체</option> -->
+<!-- 								<option value="1">허가</option> -->
+<!-- 								<option value="2">신고</option> -->
+<!-- 								<option value="3">미신고관정</option> -->
+<!-- 								<option value="6">온천시설</option> -->
+<!-- 								<option value="7">굴착행위</option> -->
+<!-- 								<option value="4">오염원</option> -->
+<!-- 								<option value="5">공공관정</option> -->
+<!-- 							</select> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span>용도</span> <select size="1" id="searchSelect" name="searchSelect"> -->
+<!-- 								<option value="" selected="selected">전체</option> -->
+<!-- 							</select> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span>관리번호</span> -->
+<!-- 							<input id="searchMgrnu" name="searchMgrnu" type="text" placeholder="검색어를 입력하세요."></input> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span style="width: 100%" class="seoul">ex) 103, 2005-88</span> -->
+<!-- 						</p> -->
+<%-- 						<a class="btn_search" href="javascript:featureSearch()"><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<!-- 					</ul> -->
+<!-- 				</div> -->
+<!-- 				#tab1 -->
+<!-- 				<div id="tab2" class="tab_content panel"> -->
+<!-- 					<ul> -->
+<!-- 						<p style="padding-top: 3%;"> -->
+<!-- 							<span>읍면동</span> <select size="1" id="searchEmd" name="searchEmd" onchange='changedSearchEmd()'> -->
+<!-- 								<option value="" selected="selected">전체</option> -->
+<!-- 							</select> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span>리</span> <select size="1" id="searchRi" name="searchRi"> -->
+<!-- 								<option value="" selected="selected">전체</option> -->
+<!-- 							</select> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span>지번검색</span><input id="jibun" name="jibun" type="text" placeholder="검색어를 입력하세요."></input> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span style="width: 100%">ex) 소흘읍 송우리, 소흘읍 무림리</span> -->
+<!-- 						</p> -->
 						
-						<a class="btn_search examine" href='javascript:fn_AddrSearch(1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-						<a class="btn_search seoul" href='javascript:fn_featureSearch(1,1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-						<a class="btn_search undclared" href='javascript:fn_featureSearch(2,1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-					</ul>
+<%-- 						<a class="btn_search examine" href='javascript:fn_AddrSearch(1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<%-- 						<a class="btn_search seoul" href='javascript:fn_featureSearch(1,1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<%-- 						<a class="btn_search undclared" href='javascript:fn_featureSearch(2,1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<!-- 					</ul> -->
 
-				</div>
-				<!-- #tab3 -->
-				<div id="tab3" class="tab_content panel">
-					<ul>
-						<p style="padding-top: 3%;">
-							<span>새주소검색</span><input id="juso" name="juso" type="text" placeholder="검색어를 입력하세요."></input>
-						</p>
-						<p>
-							<span style="width: 100%">ex) 방산길 204, 226</span>
-						</p>
-						<a class="btn_search examine" href='javascript:fn_AddrSearch(1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-						<a class="btn_search seoul" href='javascript:fn_featureSearch(1,2);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-						<a class="btn_search undclared" href='javascript:fn_featureSearch(2,2);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-					</ul>
-				</div>
-				<!-- #tab4 -->
-				<div id="tab4" class="tab_content panel undclared">
-					<ul>
-						<p>
-							<span>현장조사번호</span>
-							<input id="searchSpt" name="searchSpt" type="text" placeholder="검색어를 입력하세요."></input>
-						</p>
-						<p>
-							<span style="width: 100%">ex) PC010, 300</span>
-						</p>
-						<a class="btn_search" href="javascript:featureSearch()"><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div id="switchDiv" style="display: none" class="panel">
-			<ul>
-				<p style="padding-top: 3%;">
-					<span>경도</span><input id="lon" name="lon" type="text" readonly="readonly"></input>
-				</p>
-				<p>
-					<span>위도</span><input id="lat" name="lat" type="text" readonly="readonly"></input>
-				</p>
-				<p style="padding-top: 3%;">
-					<span>TM좌표X</span><input id="loX" name="loX" type="text" readonly="readonly"></input>
-				</p>
-				<p style="padding-top: 3%;">
-					<span>TM좌표Y</span><input id="laY" name="laY" type="text" readonly="readonly"></input>
-				</p>
-				<p style="padding-top: 3%;"> 
-					<span>주소</span><input id="addr" name="addr" type="text"></input>
-				</p>
-				<p style="padding-top: 3%;">	
-					<button onclick="fn_AddrSearch(3)">주소검색</button>
-					<span class="circle">
-						<button class="inhuga" onclick="popupDevPosbl(2)">인허가검토</button>
-						<button class="devpos" onclick="popupDevPosbl(3)">개발가능성<br/>검토</button>
-					</span>
-					<span class="polygon">
-						<button class="inhuga" onclick="popupPolygon(2)">인허가검토</button>
-						<button class="devpos" onclick="popupPolygon(3)">개발가능성<br/>검토</button>
-					<span>
-				</p>
+<!-- 				</div> -->
+<!-- 				#tab3 -->
+<!-- 				<div id="tab3" class="tab_content panel"> -->
+<!-- 					<ul> -->
+<!-- 						<p style="padding-top: 3%;"> -->
+<!-- 							<span>새주소검색</span><input id="juso" name="juso" type="text" placeholder="검색어를 입력하세요."></input> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span style="width: 100%">ex) 방산길 204, 226</span> -->
+<!-- 						</p> -->
+<%-- 						<a class="btn_search examine" href='javascript:fn_AddrSearch(1);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<%-- 						<a class="btn_search seoul" href='javascript:fn_featureSearch(1,2);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<%-- 						<a class="btn_search undclared" href='javascript:fn_featureSearch(2,2);'><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<!-- 					</ul> -->
+<!-- 				</div> -->
+<!-- 				#tab4 -->
+<!-- 				<div id="tab4" class="tab_content panel undclared"> -->
+<!-- 					<ul> -->
+<!-- 						<p> -->
+<!-- 							<span>현장조사번호</span> -->
+<!-- 							<input id="searchSpt" name="searchSpt" type="text" placeholder="검색어를 입력하세요."></input> -->
+<!-- 						</p> -->
+<!-- 						<p> -->
+<!-- 							<span style="width: 100%">ex) PC010, 300</span> -->
+<!-- 						</p> -->
+<%-- 						<a class="btn_search" href="javascript:featureSearch()"><img src="<c:url value='/image/map/searchbtn.png'/>" alt="검색하기 버튼" /></a> --%>
+<!-- 					</ul> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<div id="switchDiv" style="display: none" class="panel"> -->
+<!-- 			<ul> -->
+<!-- 				<p style="padding-top: 3%;"> -->
+<!-- 					<span>경도</span><input id="lon" name="lon" type="text" readonly="readonly"></input> -->
+<!-- 				</p> -->
+<!-- 				<p> -->
+<!-- 					<span>위도</span><input id="lat" name="lat" type="text" readonly="readonly"></input> -->
+<!-- 				</p> -->
+<!-- 				<p style="padding-top: 3%;"> -->
+<!-- 					<span>TM좌표X</span><input id="loX" name="loX" type="text" readonly="readonly"></input> -->
+<!-- 				</p> -->
+<!-- 				<p style="padding-top: 3%;"> -->
+<!-- 					<span>TM좌표Y</span><input id="laY" name="laY" type="text" readonly="readonly"></input> -->
+<!-- 				</p> -->
+<!-- 				<p style="padding-top: 3%;">  -->
+<!-- 					<span>주소</span><input id="addr" name="addr" type="text"></input> -->
+<!-- 				</p> -->
+<!-- 				<p style="padding-top: 3%;">	 -->
+<!-- 					<button onclick="fn_AddrSearch(3)">주소검색</button> -->
+<!-- 					<span class="circle"> -->
+<!-- 						<button class="inhuga" onclick="popupDevPosbl(2)">인허가검토</button> -->
+<!-- 						<button class="devpos" onclick="popupDevPosbl(3)">개발가능성<br/>검토</button> -->
+<!-- 					</span> -->
+<!-- 					<span class="polygon"> -->
+<!-- 						<button class="inhuga" onclick="popupPolygon(2)">인허가검토</button> -->
+<!-- 						<button class="devpos" onclick="popupPolygon(3)">개발가능성<br/>검토</button> -->
+<!-- 					<span> -->
+<!-- 				</p> -->
 				
-			</ul>
-			<input type="hidden" id="geomXY" name="geomXY"/>
-			<input type="hidden" id="geomLatLon" name="geomLatLon"/>
-			<input type="hidden" id="area" name="area"/>
-		</div>
-		<!-- tabmenu 버튼부분 -->
-		<div id="tabDiv" style="height: 100%;width:100%;">
-			<ul id="mgrnuInfoList" style="overflow-y: scroll; height: 95%; width:100%;"></ul>
-		</div>
-		<!-- .tab_container -->
-		<!-- #container -->
-	</div>
+<!-- 			</ul> -->
+<!-- 			<input type="hidden" id="geomXY" name="geomXY"/> -->
+<!-- 			<input type="hidden" id="geomLatLon" name="geomLatLon"/> -->
+<!-- 			<input type="hidden" id="area" name="area"/> -->
+<!-- 		</div> -->
+<!-- 		<!-- tabmenu 버튼부분 -->
+<!-- <!-- 		<div id="tabDiv" style="height: 100%;width:100%;"> -->
+<!-- <!-- 			<ul id="mgrnuInfoList" style="overflow-y: scroll; height: 95%; width:100%;"></ul> --> 
+<!-- <!-- 		</div> --> 
+<!-- 		<!-- .tab_container -->
+<!-- 		<!-- #container --> 
+<!-- 	</div> -->
 	<!--검색결과-->
 	<div id="rightClose" style="position: absolute; top: 50%; right: 308px; z-index: 9999; width: 23px; height: 23px;" border="0" frameborder="0" scrolling="no">
 		<A title="접기" id="Close" href="javascript:rightSlide();"><IMG alt="접기" src="<c:url value='/image/map/right_close.png'/>"></A>
