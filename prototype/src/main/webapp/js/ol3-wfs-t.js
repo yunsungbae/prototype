@@ -86,7 +86,7 @@ var select = new ol.interaction.Select({
 var dirty = {};
 var formatWFS = new ol.format.WFS();
 var formatGML = new ol.format.GML({
-	featureNS:'http://35.163.52.196:8080/geoserver/post/wfs',
+	featureNS:'http://35.163.52.196:8080/geoserver/cite/wfs',
 	featureType: 'pochun_emd_map',
 	srsName: 'EPSG:3857'
 	});
